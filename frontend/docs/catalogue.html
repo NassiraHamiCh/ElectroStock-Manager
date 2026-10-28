@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Catalogue — ElectroStock</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="../assets/css/style.css"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+  
+  <style>
+    .tabs-container { display: flex; gap: 8px; border-bottom: 2px solid var(--border); padding-bottom: 0; margin-bottom: 24px; }
+    .tab-btn { padding: 12px 20px; background: transparent; border: none; border-bottom: 3px solid transparent; color: var(--text-muted); font-weight: 600; font-family: 'DM Sans'; font-size: 0.9rem; cursor: pointer; margin-bottom: -2px; transition: all 0.2s; }
+    .tab-btn:hover { color: var(--text-primary); }
+    .tab-btn.active { color: var(--blue-600); border-bottom-color: var(--blue-600); }
+    .tab-content { display: none; animation: fadeUp 0.3s ease; }
+    .tab-content.active { display: block; }
+
+    .sup-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px;}
+    .sup-card{background:var(--bg-card);border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:24px;transition:var(--transition);position:relative;overflow:hidden;}
+    .sup-card:hover{border-color:var(--blue-300);box-shadow:var(--shadow-md);transform:translateY(-3px);}
+    .sup-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--blue-500),var(--blue-300));transform:scaleX(0);transform-origin:left;transition:transform .4s;}
+    .sup-card:hover::after{transform:scaleX(1);}
+    .sup-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:20px;background:linear-gradient(135deg,var(--blue-100),var(--blue-200));color:var(--blue-600);margin-bottom:16px;}
+    .sup-name{font-family:'Syne',sans-serif;font-weight:700;font-size:1.05rem;color:var(--text-primary);margin-bottom:4px;}
+    .sup-detail{font-size:.82rem;color:var(--text-secondary);display:flex;align-items:center;gap:6px;margin-bottom:4px;}
+    .sup-detail i{width:14px;color:var(--text-muted);}
+    .sup-count{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;font-size:.75rem;font-weight:600;background:var(--blue-100);color:var(--blue-700);margin-top:12px;}
+
+  </style>
+</head>
+<body>
+<div class="app-layout">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header"><div class="sidebar-brand">ElectroStock</div></div>
+    <div class="sidebar-toggle" onclick="toggleSidebar()"><i class="fas fa-chevron-left"></i></div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">VUE D'ENSEMBLE</div>
+      <a class="nav-item" href="dashboard.html"><span class="nav-label">Dashboard</span></a>
+      <a class="nav-item" href="rapports.html"><span class="nav-label">Rapports</span></a>
+      <div class="nav-section-label">OPÉRATIONS</div>
+      <a class="nav-item" href="stock.html"><span class="nav-label">Stock</span><span class="nav-badge" id="sidebarAlertBadge" style="display:none;">0</span></a>
+      <a class="nav-item " href="catalogue.html"><span class="nav-label">Catalogue</span></a>
+      <div class="nav-section-label">SYSTÈME</div>
+      <a class="nav-item" href="utilisateurs.html"><span class="nav-label">Utilisateurs</span></a>
+      <a class="nav-item" href="parametres.html"><span class="nav-label">Paramètres</span></a>
+      <div style="flex:1;"></div>
+      <a class="nav-item" href="../../index.html" style="color:var(--red);"><span class="nav-label">Déconnexion</span></a>
+    </nav>
+  </aside>
+
+  <div class="main-area">
+
+    <header>
+        <div class="header-title">Gestion du <span>Catalogue</span></div>
+        <div style="margin-left:auto;"></div>
+
+        <div class="header-actions">
+            <button class="header-btn theme-toggle" onclick="toggleTheme()" title="Changer thème">
+              <i class="fas fa-moon"></i>
+            </button>
+            <div class="header-profile" onclick="toggleDropdown()">
+              <div class="profile-avatar" id="dashAvatar">Ad</div>
+              <span class="profile-name" id="dashProfileName">Admin.</span>
+              <i class="fas fa-chevron-down profile-arrow"></i>
+            </div>
+        </div>
+        <div class="dropdown" id="profileDropdown">
+          <div class="dropdown-item" onclick="window.location='parametres.html'"><i class="fas fa-user"></i>Mon profil</div>
+          <div class="dropdown-item" onclick="toggleTheme()"><i class="fas fa-palette"></i>Changer thème</div>
+          <div class="dropdown-divider"></div>
+          <div class="dropdown-item" style="color:var(--red);" onclick="window.location='../index.html'">
+            <i class="fas fa-right-from-bracket" style="color:var(--red)"></i>Déconnexion
+          </div>
+        </div>
+      </header>
+
+    <div class="content">
+      <div class="page-header">
+        <div>
+          <div class="page-subtitle">Produits, Catégories et Fournisseurs</div>
+        </div>
+      </div>
+
+      <!-- ONGLETS -->
+      <div class="tabs-container">
+        <button class="tab-btn active" onclick="openTab('tabProduits')">Produits</button>
+        <button class="tab-btn" onclick="openTab('tabCategories')">Catégories</button>
+        <button class="tab-btn" onclick="openTab('tabFournisseurs')">Fournisseurs</button>
+      </div>
+
+      <!-- ONGLET PRODUITS -->
+      <div id="tabProduits" class="tab-content active">
+
+
+        <div class="filter-bar">
+          <div class="search-sm"><i class="fas fa-search" style="color:var(--text-muted)"></i><input placeholder="Rechercher..." id="searchProduit" onkeyup="searchProducts()"></div>
+<div class="page-actions" style="margin-bottom:16px; justify-content:flex-end;">
+
+
+    <div class="tooltip-wrapper">
+        <button class="btn btn-outline" onclick="exportProductsPDF()">
+            <i class="fas fa-file-pdf"></i>
+        </button>
+        <span class="tooltip-label">Export PDF</span>
+    </div>
+
+    <div class="tooltip-wrapper">
+        <button class="btn btn-primary" onclick="openAddProductModal()"><i class="fas fa-plus"></i> </button>
+        <span class="tooltip-label">Nouveau produit</span>
+      </div>
+    </div>
+</div>
+        <div class="card" style="padding:0;overflow:hidden;">
+          <table class="data-table">
+            <thead><tr><th>Produit</th><th>Catégorie</th><th>Stock</th><th>Prix</th><th>Actions</th></tr></thead>
+            <tbody id="tbodyProduits"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ONGLET CATÉGORIES -->
+      <div id="tabCategories" class="tab-content">
+<div class="page-actions" style="margin-bottom:16px; justify-content:flex-end;">
+
+<div class="tooltip-wrapper">
+    <button class="btn btn-primary" onclick="openModal('modalCategorie')"><i class="fas fa-plus"></i></button>
+    <span class="tooltip-label">Nouvelle catégorie</span>
+</div>
+        </div>
+        <div class="card" style="padding:0;overflow:hidden;">
+          <table class="data-table">
+            <thead><tr><th>Nom</th><th>Produits liés</th><th>Actions</th></tr></thead>
+            <tbody id="tbodyCategories"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ONGLET FOURNISSEURS -->
+      <div id="tabFournisseurs" class="tab-content">
+        <div class="page-actions" style="margin-bottom:16px; justify-content:flex-end;">
+          <div class="tooltip-wrapper">
+              <button class="btn btn-primary" onclick="openModal('modalSup')"><i class="fas fa-plus"></i></button>
+              <span class="tooltip-label">Nouveau fournisseur</span>
+          </div>
+        </div>
+        <div class="sup-grid" id="supGrid"></div>
+      </div>
+    </div>
+
+<!-- MODAL PRODUIT -->
+<div class="modal-overlay" id="modalProduit">
+  <div class="modal">
+    <div class="modal-header"><h3 id="modalProductTitle">Ajouter un produit</h3><button class="modal-close" onclick="closeModal('modalProduit')"><i class="fas fa-xmark"></i></button></div>
+    <div class="modal-body">
+      <input type="hidden" id="prodId">
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Nom</label><input class="form-input" id="prodName" placeholder="Ex: iPhone 15"></div>
+        <div class="form-group"><label class="form-label">Référence</label><input class="form-input" id="prodRef" placeholder="Ex: SMH-001"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Catégorie</label>
+        <select class="form-select" id="prodCategory"><option value="">Aucune catégorie</option></select>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Prix (MAD)</label><input class="form-input" type="number" id="prodPrice" placeholder="0.00"></div>
+        <div class="form-group"><label class="form-label">Stock</label><input class="form-input" type="number" id="prodStock" placeholder="0"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Seuil d'alerte</label><input class="form-input" type="number" id="prodSeuil" placeholder="10"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modalProduit')" style="width: auto !important;">Annuler</button>
+      <button class="btn btn-primary" onclick="saveProduct()" style="width: auto !important;"> Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+    <!-- MODAL CATEGORIE -->
+    <div class="modal-overlay" id="modalCategorie">
+      <div class="modal">
+        <div class="modal-header"><h3>Nouvelle Catégorie</h3><button class="modal-close" onclick="closeModal('modalCategorie')"><i class="fas fa-xmark"></i></button></div>
+        <div class="modal-body">
+          <div class="form-group"><label class="form-label">Nom de la catégorie</label><input type="text" id="catName" class="form-input" placeholder="Ex: Imprimantes 3D"></div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="closeModal('modalCategorie')" style="width: auto !important;">Annuler</button>
+          <button class="btn btn-primary" onclick="addCategory()" style="width: auto !important;"> Enregistrer</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL FOURNISSEUR -->
+    <div class="modal-overlay" id="modalSup">
+      <div class="modal">
+        <div class="modal-header"><h3>Nouveau Fournisseur</h3><button class="modal-close" onclick="closeModal('modalSup')"><i class="fas fa-xmark"></i></button></div>
+        <div class="modal-body">
+          <div class="form-group"><label class="form-label">Nom</label><input class="form-input" id="supName" placeholder="Ex: TechDistrib"></div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="supEmail" placeholder="contact@tech.com"></div>
+            <div class="form-group"><label class="form-label">Téléphone</label><input class="form-input" id="supPhone" placeholder="+212 600 000 000"></div>
+          </div>
+          <div class="form-group"><label class="form-label">Adresse</label><input class="form-input" id="supAddr" placeholder="Ville, Pays"></div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="closeModal('modalSup')" style="width: auto !important;">Annuler</button>
+          <button class="btn btn-primary" onclick="addSupplier()" style="width: auto !important;"> Enregistrer</button>
+        </div>
+      </div>
+    </div>
+
+  </div> 
+</div> 
+
+<script src="../assets/js/common.js"></script>
+<script src="../assets/js/api.js"></script>
+<script src="../assets/js/catalogue.js"></script>
+</body>
+</html>

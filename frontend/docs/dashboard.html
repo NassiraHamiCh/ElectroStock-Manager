@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>ElectroStock — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="../assets/css/style.css"/>
+<style>
+    /* CHAT FULLSCREEN */
+    /* Chat agrandi — garde sidebar + header, cache juste le contenu dashboard */
+    body.chat-fullscreen .main-area > .content > *:not(#chatPanel) { display: none !important; }
+  body.chat-fullscreen .main-area > .content {
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+  }
+  body.chat-fullscreen #chatPanel {
+    position: static !important;
+    width: 100% !important;
+    min-width: 100% !important;
+    height: 100% !important;
+    max-height: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+    flex: 1;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  body.chat-fullscreen #chatPanel .chat-messages {
+    flex: 1 !important;
+    max-height: none !important;
+    height: auto !important;
+  }
+  body.chat-fullscreen .chat-suggestions {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  body.chat-fullscreen .chat-input-row {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  /* DASHBOARD ACTIONS */
+  .expand-btn {
+    width: 34px; height: 34px; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--bg-2);
+    color: var(--text-muted); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s; font-size: 13px;
+  }
+  .expand-btn:hover { color: var(--blue-500); border-color: var(--blue-500); }
+
+  /* DASHBOARD ALERTS */
+  /* Limiter les alertes visibles sur le dashboard */
+  #alertList > div:nth-child(n+4) { display: none; }
+
+  /* NOTIFICATIONS */
+  .notif-mark-read-btn {
+    width: 32px; height: 32px; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--bg-2);
+    color: var(--text-muted); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s; font-size: 13px;
+  }
+  .notif-mark-read-btn:hover {
+    color: var(--blue-500); border-color: var(--blue-500);
+    background: rgba(59,130,246,0.08);
+  }
+  .notif-mark-read-btn.read-done {
+    color: var(--green); border-color: var(--green);
+    background: rgba(34,197,94,0.08);
+  }
+</style>
+</head>
+<body>
+<div class="app-layout">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header"><div class="sidebar-brand">ElectroStock</div></div>
+    <div class="sidebar-toggle" onclick="toggleSidebar()"><i class="fas fa-chevron-left"></i></div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">VUE D'ENSEMBLE</div>
+      <a class="nav-item active" href="dashboard.html"><span class="nav-label">Dashboard</span></a>
+      <a class="nav-item" href="rapports.html"><span class="nav-label">Rapports</span></a>
+      <div class="nav-section-label">OPÉRATIONS</div>
+      <a class="nav-item" href="stock.html"><span class="nav-label">Stock</span><span class="nav-badge" id="sidebarAlertBadge" style="display:none;">0</span></a>
+      <a class="nav-item" href="catalogue.html"><span class="nav-label">Catalogue</span></a>
+      <div class="nav-section-label">SYSTÈME</div>
+      <a class="nav-item" href="utilisateurs.html"><span class="nav-label">Utilisateurs</span></a>
+      <a class="nav-item" href="parametres.html"><span class="nav-label">Paramètres</span></a>
+      <div style="flex:1;"></div>
+      <a class="nav-item" href="../../index.html" style="color:var(--red);"><span class="nav-label">Déconnexion</span></a>
+    </nav>
+  </aside>
+  <div class="main-area">
+<header>
+  <div class="header-title"><span>Dashboard</span></div>
+  <div class="search-bar" style="margin-left:20px;">
+    <i class="fas fa-magnifying-glass"></i>
+    <input type="text" placeholder="Rechercher produit, référence..." autocomplete="off"/>
+  </div>
+  <div class="header-actions">
+    <button class="header-btn" title="Notifications" onclick="toggleNotif()">
+      <i class="fas fa-bell"></i>
+      <span class="notif-count" id="headerNotifCount" style="display:none;">0</span>
+    </button>
+    <button class="header-btn theme-toggle" onclick="toggleTheme()" title="Changer thème">
+      <i class="fas fa-moon"></i>
+    </button>
+    <div class="header-profile" onclick="toggleDropdown()">
+      <div class="profile-avatar" id="dashAvatar">Ad</div>
+      <span class="profile-name" id="dashProfileName">Admin.</span>
+      <i class="fas fa-chevron-down profile-arrow"></i>
+    </div>
+  </div>
+
+  <div class="notif-panel" id="notifPanel">
+    <div class="notif-panel-header">
+      <span class="notif-panel-title">Notifications</span>
+      <div class="tooltip-wrapper">
+        <button class="notif-mark-read-btn" id="markAllReadBtn" onclick="markAllNotifRead()">
+          <i class="fas fa-check-double"></i>
+        </button>
+        <span class="tooltip-label" style="bottom:130%;left:auto;right:0;transform:none;">Tout marquer lu</span>
+      </div>
+    </div>
+    <div class="notif-list" id="notifList">
+      <div style="text-align:center;padding:20px;color:var(--text-muted);">Chargement...</div>
+    </div>
+  </div>
+
+  <div class="dropdown" id="profileDropdown">
+    <div class="dropdown-item" onclick="window.location='parametres.html'"><i class="fas fa-user"></i>Mon profil</div>
+    <div class="dropdown-item" onclick="window.location='parametres.html'"><i class="fas fa-gear"></i>Paramètres</div>
+    <div class="dropdown-item" onclick="toggleTheme()"><i class="fas fa-palette"></i>Changer thème</div>
+    <div class="dropdown-divider"></div>
+    <div class="dropdown-item" style="color:var(--red);" onclick="window.location='../../index.html'">
+      <i class="fas fa-right-from-bracket" style="color:var(--red)"></i>Déconnexion
+    </div>
+  </div>
+</header>
+
+    <div class="content">
+      <div class="page-header">
+        <div>
+          <div class="page-subtitle">Rapport en temps réel — Base de données Oracle</div>
+        </div>
+      </div>
+
+      <!-- KPIs -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-header"><div class="kpi-icon blue"><i class="fas fa-box"></i></div><div class="kpi-trend up"><i class="fas fa-arrow-up" style="font-size:9px"></i> Live</div></div>
+          <div class="kpi-val" id="kpiProducts">0</div>
+          <div class="kpi-label">Produits Actifs</div>
+          <div class="kpi-sub">Synchronisés</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-header"><div class="kpi-icon green"><i class="fas fa-coins"></i></div><div class="kpi-trend up"><i class="fas fa-arrow-up" style="font-size:9px"></i> MAD</div></div>
+          <div class="kpi-val" id="kpiValue">0</div>
+          <div class="kpi-label">Valeur Stock</div>
+          <div class="kpi-sub">Calcul automatique</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-header"><div class="kpi-icon amber"><i class="fas fa-arrow-right-arrow-left"></i></div><div class="kpi-trend neutral"><i class="fas fa-minus" style="font-size:9px"></i> 30j</div></div>
+          <div class="kpi-val" id="kpiMovements">0</div>
+          <div class="kpi-label">Mouvements (30j)</div>
+          <div class="kpi-sub">Entrées & Sorties</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-header"><div class="kpi-icon red"><i class="fas fa-triangle-exclamation"></i></div><div class="kpi-trend down"><i class="fas fa-arrow-up" style="font-size:9px"></i> Actif</div></div>
+          <div class="kpi-val" style="color:var(--red)" id="kpiAlerts">0</div>
+          <div class="kpi-label">Alertes Actives</div>
+          <div class="kpi-sub" id="kpiAlertsSub">Stocks critiques</div>
+        </div>
+      </div>
+
+      <!-- Graphiques -->
+      <div class="charts-row">
+        <div class="chart-card">
+          <div class="chart-header"><div><div class="chart-title">Mouvements de stock</div><div class="chart-subtitle">Entrées vs Sorties</div></div></div>
+          <div class="chart-wrap"><canvas id="barChart"></canvas></div>
+          <div class="chart-legend">
+            <div class="legend-item"><div class="legend-dot" style="background:var(--blue-500)"></div>Entrées</div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--teal-500)"></div>Sorties</div>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header"><div><div class="chart-title">Catégories</div><div class="chart-subtitle">Répartition réelle du stock</div></div></div>
+          <div class="donut-wrap" style="padding:20px;"><canvas id="donutChart"></canvas></div>
+        </div>
+      </div>
+
+      <div class="charts-r2">
+        <div class="chart-card">
+          <div class="chart-hd"><div><div class="chart-ttl">Stock Evolution</div><div class="chart-sub">Historique réel</div></div></div>
+          <div class="chart-wrap"><canvas id="lineChart"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-hd"><div><div class="chart-ttl">Top 5 Products</div><div class="chart-sub">By current stock level</div></div></div>
+          <div class="chart-wrap"><canvas id="hBarChart"></canvas></div>
+        </div>
+      </div>
+
+      <!-- Tableau + Alertes -->
+      <div class="bottom-row">
+        <div class="table-card">
+          <div class="chart-header">
+            <div><div class="chart-title">Produits récents</div><div class="chart-subtitle">Base de données</div></div>
+            <div class="tooltip-wrapper">
+              <a href="catalogue.html" class="btn btn-outline-blue" style="font-size:0.8rem;">
+                <i class="fas fa-eye"></i> 
+                <span class="tooltip-label"  style="margin-top: 10px !important;">Tout voir</span>
+              </a>
+            </div>
+          </div>
+          <table class="data-table">
+            <thead><tr><th>Produit</th><th>Catégorie</th><th>Stock</th><th>Prix</th><th>Statut</th></tr></thead>
+            <tbody id="tbodyRecentProducts"></tbody>
+          </table>
+        </div>
+        <div class="alerts-card">
+          <div class="chart-header">
+            <div><div class="chart-title">Alertes actives</div><div class="chart-subtitle" id="alertCountSubtitle">0 nécessitent une action</div></div>
+            <div class="tooltip-wrapper">
+<a href="stock.html?tab=alertes" class="btn btn-outline-blue" style="font-size:0.8rem;">
+  <i class="fas fa-eye"></i> 
+  <span class="tooltip-label" style="margin-top: 10px !important;">Tout voir</span>
+</a>
+            </div>
+          </div>
+          <div class="alert-list" id="alertList"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Chat IA -->
+<button class="chat-float-btn" onclick="toggleChat()" title="Assistant IA">
+  <i class="fas fa-robot"></i>
+  <span class="notif-dot"></span>
+</button>
+<div class="chat-panel" id="chatPanel">
+  <div class="chat-panel-header">
+    <div class="chat-ai-avatar"><i class="fas fa-robot"></i></div>
+    <div><div class="chat-ai-name">Assistant ElectroStock IA</div><div class="chat-ai-status">En ligne</div></div>
+    <button class="expand-btn" onclick="toggleChatFullscreen()" title="Agrandir"><i class="fas fa-expand" id="expandIcon"></i></button>
+    <button class="chat-close" onclick="toggleChat()"><i class="fas fa-xmark"></i></button>
+  </div>
+  <div class="chat-messages" id="chatMessages">
+    <div class="chat-msg ai"><div class="msg-avatar ai"><i class="fas fa-robot"></i></div><div class="msg-bubble">Bonjour ! 👋 Posez-moi une question sur votre stock.</div></div>
+  </div>
+  <div class="chat-suggestions">
+    <div class="chat-sug" onclick="sendSug(this)">📊 Rapport ruptures</div>
+    <div class="chat-sug" onclick="sendSug(this)">🛒 Suggérer commandes</div>
+    <div class="chat-sug" onclick="sendSug(this)">📦 Valeur totale stock</div>
+  </div>
+  <div class="chat-input-row">
+    <input class="chat-input" id="chatInput" placeholder="Posez votre question..." onkeydown="if(event.key==='Enter')sendChat()"/>
+    <button class="chat-send" onclick="sendChat()"><i class="fas fa-paper-plane"></i></button>
+  </div>
+</div>
+
+
+<!-- Modal clé API Groq -->
+<div class="api-modal-overlay" id="apiModal" style="display:none;">
+  <div class="api-modal-box">
+    <div class="api-modal-icon"><i class="fas fa-bolt"></i></div>
+    <h3 style="font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:700;margin:0 0 6px;color:var(--text);">Clé API Groq</h3>
+    <p style="font-size:0.82rem;color:var(--text-muted);margin:0 0 18px;line-height:1.5;">Clé stockée uniquement dans votre navigateur. Obtenable sur <span style="color:var(--blue-500);font-weight:500;">console.groq.com/keys</span></p>
+    <input type="password" id="groqKeyInput" class="chat-input" placeholder="gsk_..." style="width:100%;margin-bottom:8px;font-size:0.9rem;"/>
+    <div id="apiModalError" style="display:none;font-size:0.78rem;color:var(--red);margin-bottom:12px;padding:8px 12px;background:rgba(239,68,68,0.08);border-radius:8px;border:1px solid rgba(239,68,68,0.15);"></div>
+    <div style="display:flex;gap:10px;">
+      <button onclick="closeApiModal()" style="flex:1;padding:10px;border-radius:8px;background:var(--bg-2);border:1px solid var(--border);color:var(--text-muted);cursor:pointer;font-family:inherit;font-size:0.85rem;">Plus tard</button>
+      <button onclick="saveGroqKey()" style="flex:1;padding:10px;border-radius:8px;background:var(--blue-600);border:none;color:#fff;cursor:pointer;font-family:inherit;font-size:0.85rem;font-weight:600;">Connecter</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .api-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);z-index:9999;display:flex;align-items:center;justify-content:center;}
+  .api-modal-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:32px;width:92%;max-width:420px;animation:fadeUp .3s ease;}
+  .api-modal-icon{width:48px;height:48px;border-radius:12px;background:rgba(245,158,11,0.1);display:flex;align-items:center;justify-content:center;margin-bottom:16px;}
+  .api-modal-icon i{font-size:20px;color:#f59e0b;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+</style>
+
+<!-- Dans ton <head> ou avant les autres scripts -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="../assets/js/common.js"></script>
+<script src="../assets/js/api.js"></script>
+<script src="../assets/js/dashboard.js"></script>
+<script src="../assets/js/gemini-chat.js"></script>
+
+
+</body>
+</html>

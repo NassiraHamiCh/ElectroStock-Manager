@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion — ElectroStock</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/auth.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-logo">
+                <h1>ElectroStock</h1>
+                <p id="authSubtitle">Connectez-vous à votre espace</p>
+            </div>
+
+            <!-- ===== CONNEXION ===== -->
+            <form id="loginForm" autocomplete="on">
+                <div class="auth-message" id="loginMsg"></div>
+
+                <div class="input-group">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" id="username" name="username" placeholder="Nom d'utilisateur ou e-mail" required autocomplete="username"/>
+                </div>
+
+                <div class="input-group">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="password" name="password" placeholder="Mot de passe" required autocomplete="current-password"/>
+                    <button type="button" class="toggle-password" onclick="togglePwd('password', this)"><i class="fa-solid fa-eye-slash"></i></button>
+                </div>
+
+                <div class="form-options">
+                    <label style="display:flex; align-items:center; gap:5px; margin:0; font-size:13px; color:#606770; cursor:pointer;">
+                        <input type="checkbox" style="accent-color:#1877f2;"> Se souvenir
+                    </label>
+                    <button type="button" class="auth-tab" onclick="switchTab('forgot')">Mot de passe oublié ?</button>
+                </div>
+
+                <button type="submit" class="btn-auth" id="loginBtn">Se connecter</button>
+
+                <p class="switch-text">Vous n'avez pas de compte ? <button type="button" class="auth-tab" id="tabSignup" onclick="switchTab('signup')">Créer un compte</button></p>
+            </form>
+
+            <!-- ===== INSCRIPTION ===== -->
+            <form id="signupForm" class="auth-form-hidden">
+                <div class="auth-message" id="signupMsg"></div>
+
+                <div class="input-group">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" id="newUsername" name="newUsername" placeholder="Nom d'utilisateur" required autocomplete="username">
+                </div>
+
+                <!-- ✅ NOUVEAU : CHAMP EMAIL -->
+                <div class="input-group">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input type="email" id="newEmail" name="newEmail" placeholder="Adresse e-mail" required autocomplete="email">
+                </div>
+
+                <div class="input-group">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="newPassword" name="newPassword" placeholder="Mot de passe" required autocomplete="new-password">
+                    <button type="button" class="toggle-password" onclick="togglePwd('newPassword', this)"><i class="fa-solid fa-eye-slash"></i></button>
+                </div>
+
+                <div class="input-group">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirmer le mot de passe" required autocomplete="new-password">
+                    <button type="button" class="toggle-password" onclick="togglePwd('confirmPassword', this)"><i class="fa-solid fa-eye-slash"></i></button>
+                </div>
+
+                <button type="submit" class="btn-auth" id="signupBtn">Créer un compte</button>
+                <p class="switch-text">Vous avez déjà un compte ? <button type="button" class="auth-tab" id="tabLogin" onclick="switchTab('login')">Se connecter</button></p>
+            </form>
+
+            <!-- ===== MOT DE PASSE OUBLIÉ ===== -->
+            <form id="forgotForm" class="auth-form-hidden">
+                <div class="auth-message" id="forgotMsg"></div>
+                <div class="auth-success" id="forgotSuccess" style="display:none;"></div>
+
+                <div class="input-group">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input type="email" id="forgotEmail" name="forgotEmail" placeholder="E-mail associé à votre compte" required autocomplete="email">
+                </div>
+
+                <button type="submit" class="btn-auth" id="forgotBtn">Envoyer le lien</button>
+                <p class="switch-text"><button type="button" class="auth-tab" onclick="switchTab('login')">Retour à la connexion</button></p>
+            </form>
+
+        </div><!-- /auth-card -->
+    </div><!-- /auth-container -->
+
+    <script>
+        // Bascule entre les formulaires
+        function switchTab(tab) {
+            ['loginForm', 'signupForm', 'forgotForm'].forEach(id =>
+                document.getElementById(id).classList.add('auth-form-hidden')
+            );
+            document.getElementById(tab + 'Form').classList.remove('auth-form-hidden');
+
+            
+            // Cacher tous les messages
+            ['loginMsg', 'signupMsg', 'forgotMsg'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) { el.style.display = 'none'; el.textContent = ''; }
+            });
+            document.getElementById('forgotSuccess').style.display = 'none';
+
+            const subtitles = {
+                login: 'Connectez-vous à votre espace',
+                signup: 'Créez votre compte',
+                forgot: 'Réinitialisez votre mot de passe'
+            };
+            document.getElementById('authSubtitle').textContent = subtitles[tab];
+        }
+
+        // Afficher/masquer le mot de passe
+        function togglePwd(inputId, btn) {
+            const input = document.getElementById(inputId);
+            const icon = btn.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
+            } else {
+                input.type = 'password';
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+            }
+        }
+
+document.getElementById('forgotForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const email = document.getElementById('forgotEmail').value.trim();
+    const msgDiv = document.getElementById('forgotMsg');
+    const successDiv = document.getElementById('forgotSuccess');
+
+    msgDiv.style.display = 'none';
+    successDiv.style.display = 'none';
+
+    if (!email) {
+        msgDiv.textContent = "Veuillez entrer un e-mail.";
+        msgDiv.style.display = 'block';
+        return;
+    }
+
+    try {
+        const res = await fetch("http://localhost:3000/api/auth/forgot", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email })
+        });
+        const data = await res.json();
+        if (data.success) {
+            successDiv.textContent = data.message;
+            successDiv.style.display = 'block';
+        } else {
+            msgDiv.textContent = data.message;
+            msgDiv.style.display = 'block';
+        }
+    } catch (e) {
+        msgDiv.textContent = "Serveur injoignable";
+        msgDiv.style.display = 'block';
+    }
+});
+    </script>
+    <script src="../assets/js/auth.js"></script>
+</body>
+</html>

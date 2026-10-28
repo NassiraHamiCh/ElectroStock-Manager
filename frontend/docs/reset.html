@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Réinitialisation — ElectroStock</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/auth.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-logo">
+                <h1>ElectroStock</h1>
+                <p>Nouveau mot de passe</p>
+            </div>
+
+            <form id="resetForm">
+                <div class="auth-message" id="resetMsg"></div>
+
+                <div class="input-group">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="newPassword" placeholder="Nouveau mot de passe" required autocomplete="new-password">
+                    <button type="button" class="toggle-password" onclick="togglePwd('newPassword', this)"><i class="fa-solid fa-eye-slash"></i></button>
+                </div>
+
+                <div class="input-group">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <input type="password" id="confirmPassword" placeholder="Confirmer le mot de passe" required autocomplete="new-password">
+                    <button type="button" class="toggle-password" onclick="togglePwd('confirmPassword', this)"><i class="fa-solid fa-eye-slash"></i></button>
+                </div>
+
+                <button type="submit" class="btn-auth" id="resetBtn">Modifier mon mot de passe</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function togglePwd(inputId, btn) {
+            const input = document.getElementById(inputId);
+            const icon = btn.querySelector('i');
+            input.type = input.type === 'password' ? 'text' : 'password';
+            icon.classList.toggle('fa-eye');
+            icon.classList.toggle('fa-eye-slash');
+        }
+
+        function showMsg(text, ok) {
+            const div = document.getElementById('resetMsg');
+            div.textContent = text;
+            div.className = 'auth-message ' + (ok ? 'success' : 'error');
+            div.style.display = 'block';
+        }
+
+        // Récupère le token depuis l'URL : reset.html?token=xxxx
+        const token = new URLSearchParams(window.location.search).get('token');
+
+        document.getElementById('resetForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            if (!token) return showMsg("Lien invalide (token manquant).", false);
+
+            const password = document.getElementById('newPassword').value;
+            const confirm  = document.getElementById('confirmPassword').value;
+            if (password.length < 4) return showMsg("Mot de passe trop court (min 4).", false);
+            if (password !== confirm) return showMsg("Les mots de passe ne correspondent pas.", false);
+
+            const btn = document.getElementById('resetBtn');
+            btn.disabled = true;
+            btn.textContent = "Modification...";
+
+            try {
+                const res = await fetch("http://localhost:3000/api/auth/reset", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ token, password })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showMsg(data.message, true);
+                    setTimeout(() => { window.location.href = "login.html"; }, 2000);
+                } else {
+                    showMsg(data.message, false);
+                    btn.disabled = false;
+                    btn.textContent = "Modifier mon mot de passe";
+                }
+            } catch (e) {
+                showMsg("Serveur injoignable", false);
+                btn.disabled = false;
+                btn.textContent = "Modifier mon mot de passe";
+            }
+        });
+    </script>
+</body>
+</html>

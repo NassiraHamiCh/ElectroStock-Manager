@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+    <title>Utilisateurs — ElectroStock</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+    <link rel="stylesheet" href="../assets/css/style.css"/>
+  </head>
+  <body>
+    <div class="app-layout">
+
+      <!-- ===== SIDEBAR ===== -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header"><div class="sidebar-brand">ElectroStock</div></div>
+        <div class="sidebar-toggle" onclick="toggleSidebar()"><i class="fas fa-chevron-left"></i></div>
+        <nav class="sidebar-nav">
+          <div class="nav-section-label">VUE D'ENSEMBLE</div>
+          <a class="nav-item" href="dashboard.html"><span class="nav-label">Dashboard</span></a>
+          <a class="nav-item" href="rapports.html"><span class="nav-label">Rapports</span></a>
+          <div class="nav-section-label">OPÉRATIONS</div>
+          <a class="nav-item" href="stock.html"><span class="nav-label">Stock</span><span class="nav-badge" id="sidebarAlertBadge" style="display:none;">0</span></a>
+          <a class="nav-item" href="catalogue.html"><span class="nav-label">Catalogue</span></a>
+          <div class="nav-section-label">SYSTÈME</div>
+          <a class="nav-item active" href="utilisateurs.html"><span class="nav-label">Utilisateurs</span></a>
+          <a class="nav-item" href="parametres.html"><span class="nav-label">Paramètres</span></a>
+          <div style="flex:1;"></div>
+          <a class="nav-item" href="../../index.html" style="color:var(--red);"><span class="nav-label">Déconnexion</span></a>
+        </nav>
+      </aside>
+
+      <div class="main-area">
+        <header>
+          <div class="header-title">Gestion des <span>comptes</span></div>
+          <div style="margin-left:auto;"></div>
+          <div class="header-actions">
+            <button class="header-btn theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon"></i><i class="fas fa-sun"></i></button>
+            <div class="header-profile" onclick="toggleDropdown()">
+              <div class="profile-avatar">Ad</div>
+              <span class="profile-name">Admin.</span>
+              <i class="fas fa-chevron-down profile-arrow"></i>
+            </div>
+          </div>
+
+          <div class="dropdown" id="profileDropdown">
+            <div class="dropdown-item" onclick="window.location='parametres.html'"><i class="fas fa-user"></i>Mon profil</div>
+            <div class="dropdown-item" onclick="toggleTheme()"><i class="fas fa-palette"></i>Changer thème</div>
+            <div class="dropdown-divider"></div>
+            <div class="dropdown-item" style="color:var(--red);" onclick="window.location='../../index.html'"><i class="fas fa-right-from-bracket" style="color:var(--red)"></i>Déconnexion</div>
+          </div>
+        </header>
+
+        <div class="content">
+        <div class="page-header">
+            <div>
+              <div class="page-subtitle">Gérez les comptes ayant accès au système</div>
+            </div>
+<div class="tooltip-wrapper">
+    <button class="btn btn-primary" onclick="openAddUserModal()">
+        <i class="fas fa-plus"></i>
+    </button>
+    <span class="tooltip-label">Nouvel utilisateur</span>
+</div>
+        </div>
+
+          <div class="card" style="padding:0;overflow:hidden;">
+            <table class="data-table">
+              <thead>
+                <tr><th>Utilisateur</th><th>Email</th><th>Rôle</th><th>Statut</th><th>Date de création</th><th>Actions</th></tr>
+              </thead>
+              <tbody id="tbodyUsers"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal-overlay" id="modalUser">
+          <div class="modal">
+            <div class="modal-header">
+              <h3 id="modalUserTitle">Créer un utilisateur</h3>
+              <button class="modal-close" onclick="closeModal('modalUser')"><i class="fas fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+              <input type="hidden" id="userId">
+              <div class="form-row">
+                <div class="form-group"><label class="form-label">Nom d'utilisateur</label><input type="text" id="userName" class="form-input" placeholder="Ex: jean.dupont"></div>
+                <div class="form-group"><label class="form-label">Email</label><input type="email" id="userEmail" class="form-input" placeholder="contact@electrostock.ma"></div>
+              </div>
+              <div class="form-row">
+                <div class="form-group"><label class="form-label">Mot de passe</label><input type="password" id="userPassword" class="form-input" placeholder="Minimum 4 caractères"></div>
+                <div class="form-group"><label class="form-label">Rôle</label>
+                  <select class="form-select" id="userRole">
+                    <option value="user">Utilisateur standard</option>
+                    <option value="manager">Manager</option>
+                    <option value="admin">Administrateur</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-outline" onclick="closeModal('modalUser')" style="width: auto !important;">Annuler</button>
+              <button class="btn btn-primary" onclick="saveUser()" style="width: auto !important;">Enregistrer</button>
+            </div>
+          </div>
+        </div>
+
+      </div> 
+    </div> 
+
+    <script src="../assets/js/common.js"></script>
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/utilisateurs.js"></script>
+  </body>
+</html>

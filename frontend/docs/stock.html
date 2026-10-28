@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Stock & Opérations — ElectroStock</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="../assets/css/style.css"/>
+  
+  <style>
+    /* TABS */
+    .tabs-container { display: flex; gap: 8px; border-bottom: 2px solid var(--border); padding-bottom: 0; margin-bottom: 24px; }
+    .tab-btn { padding: 12px 20px; background: transparent; border: none; border-bottom: 3px solid transparent; color: var(--text-muted); font-weight: 600; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; cursor: pointer; margin-bottom: -2px; transition: all 0.2s; }
+    .tab-btn:hover { color: var(--text-primary); }
+    .tab-btn.active { color: var(--blue-600); border-bottom-color: var(--blue-600); }
+    .tab-badge { background: var(--red); color: white; font-size: 0.7rem; padding: 2px 6px; border-radius: 99px; margin-left: 6px; }
+    .tab-content { display: none; animation: fadeUp 0.3s ease; }
+    .tab-content.active { display: block; }
+
+    /* STOCK ALERTS */
+    .alert-list-stock { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+    .alert-card-stock { padding: 16px; border-radius: 12px; border: 1.5px solid var(--border); background: var(--bg-card); display: flex; gap: 12px; align-items: flex-start; transition: var(--transition); }
+    .alert-card-stock:hover { border-color: var(--red); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    .alert-icon-sm { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 16px; }
+    
+    /* SEARCH */
+    .search-sm {
+        flex-grow: 1;              /* Permet à la barre de recherche de prendre l'espace disponible */
+        max-width: 900px;          /* Évite qu'elle soit trop longue sur grand écran */
+        position: relative;
+    }
+
+    /* TOOLTIPS */
+    .tooltip-wrapper {
+        position: relative;
+        display: inline-block;
+    }
+
+    /* L'étiquette par défaut est invisible */
+    .tooltip-label {
+        visibility: hidden;
+        opacity: 0;
+        position: absolute;
+        bottom: 120%; /* Ajuste la hauteur au-dessus du bouton */
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #333;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 12px;
+        white-space: nowrap;
+        transition: opacity 0.3s;
+        z-index: 999;
+    }
+
+    /* L'ACTION : Quand on survole le wrapper, on montre le span */
+    .tooltip-wrapper:hover .tooltip-label {
+        visibility: visible;
+        opacity: 1;
+    }
+
+ </style>
+</head>
+<body>
+  <div class="app-layout">
+
+
+    <!-- ===== SIDEBAR EXPERT ===== -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header"><div class="sidebar-brand">ElectroStock</div></div>
+      <div class="sidebar-toggle" onclick="toggleSidebar()"><i class="fas fa-chevron-left"></i></div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">VUE D'ENSEMBLE</div>
+        <a class="nav-item" href="dashboard.html"><span class="nav-label">Dashboard</span></a>
+        <a class="nav-item" href="rapports.html"><span class="nav-label">Rapports</span></a>
+        <div class="nav-section-label">OPÉRATIONS</div>
+        <a class="nav-item" href="stock.html"><span class="nav-label">Stock</span><span class="nav-badge" id="sidebarAlertBadge" style="display:none;">0</span></a>
+        <a class="nav-item active" href="catalogue.html"><span class="nav-label">Catalogue</span></a>
+        <div class="nav-section-label">SYSTÈME</div>
+        <a class="nav-item" href="utilisateurs.html"><span class="nav-label">Utilisateurs</span></a>
+        <a class="nav-item" href="parametres.html"><span class="nav-label">Paramètres</span></a>
+        <div style="flex:1;"></div>
+        <a class="nav-item" href="../../index.html" style="color:var(--red);"><span class="nav-label">Déconnexion</span></a>
+      </nav>
+    </aside>
+
+    <div class="main-area">
+      <header>
+        <div class="header-title">Gestion de <span>Stock</span></div>
+        <div style="margin-left:auto;"></div>
+
+        <div class="header-actions">
+            <button class="header-btn theme-toggle" onclick="toggleTheme()" title="Changer thème">
+              <i class="fas fa-moon"></i>
+            </button>
+            <div class="header-profile" onclick="toggleDropdown()">
+              <div class="profile-avatar" id="dashAvatar">Ad</div>
+              <span class="profile-name" id="dashProfileName">Admin.</span>
+              <i class="fas fa-chevron-down profile-arrow"></i>
+            </div>
+        </div>
+        <div class="dropdown" id="profileDropdown">
+          <div class="dropdown-item" onclick="window.location='parametres.html'"><i class="fas fa-user"></i>Mon profil</div>
+          <div class="dropdown-item" onclick="toggleTheme()"><i class="fas fa-palette"></i>Changer thème</div>
+          <div class="dropdown-divider"></div>
+          <div class="dropdown-item" style="color:var(--red);" onclick="window.location='../../index.html'">
+            <i class="fas fa-right-from-bracket" style="color:var(--red)"></i>Déconnexion
+          </div>
+        </div>
+      </header>
+
+      <div class="content">
+        <div class="page-header">
+          <div>
+            <div class="page-subtitle">Vue consolidée : Niveaux, Alertes, Mouvements et Inventaire</div>
+          </div>
+        </div>
+
+        <!-- ONGLETS -->
+        <div class="tabs-container">
+          <button class="tab-btn active" onclick="openTab('tabStock')">Niveaux de Stock</button>
+          <button class="tab-btn" onclick="openTab('tabAlertes')">Alertes <span class="tab-badge" id="alertTabBadge" style="display:none;">0</span></button>
+          <button class="tab-btn" onclick="openTab('tabMouvements')">Mouvements</button>
+          <button class="tab-btn" onclick="openTab('tabInventaire')">Inventaire</button>
+        </div>
+
+        <!-- ONGLET 1 : NIVEAUX DE STOCK -->
+        <div id="tabStock" class="tab-content active">
+          <div class="filter-bar">
+            <div class="search-sm"><i class="fas fa-search" style="color:var(--text-muted)"></i><input placeholder="Filtrer par produit..." id="filterSearch" onkeyup="filterStockTable()"></div>
+            <select id="filterStatut" onchange="filterStockTable()"><option value="">Tous les statuts</option><option value="ok">En stock</option><option value="low">Stock bas</option><option value="out">Rupture</option></select>
+          </div>
+          <div class="card" style="padding:0;overflow:hidden;">
+            <table class="data-table">
+              <thead><tr><th>Produit</th><th>Catégorie</th><th>Stock</th><th>Seuil</th><th>Valeur (MAD)</th><th>Statut</th></tr></thead>
+              <tbody id="tbodyStock"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ONGLET 2 : ALERTES -->
+        <div id="tabAlertes" class="tab-content">
+          <div class="alert-list-stock" id="alertListContainer"></div>
+        </div>
+
+        <!-- ONGLET 3 : MOUVEMENTS -->
+        <div id="tabMouvements" class="tab-content">
+ <div class="page-actions" style="margin-bottom:16px; justify-content:flex-end;">
+
+  <div class="tooltip-wrapper">
+    <button class="btn btn-primary" onclick="openModal('modalMouvement')">
+        <i class="fas fa-plus"></i> 
+    </button>
+    <span class="tooltip-label">Nouveau mouvement</span>
+</div>
+  </div>
+          <div class="card" style="padding:0;overflow:hidden;">
+            <table class="data-table">
+              <thead><tr><th>Produit</th><th>Type</th><th>Quantité</th><th>Opérateur</th><th>Date</th></tr></thead>
+              <tbody id="tbodyMouvements"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ONGLET 4 : INVENTAIRE -->
+        <div id="tabInventaire" class="tab-content">
+          <div class="page-actions" style="margin-bottom:16px; justify-content:flex-end;">
+            
+            <div class="tooltip-wrapper">
+              <button class="btn btn-primary" onclick="openProductSelect(); openModal('modalInventaire')">
+                <i class="fas fa-clipboard-check"></i>
+              </button>
+              <span class="tooltip-label">Nouveau comptage</span>
+            </div>
+
+          </div>
+          <div class="card" style="padding:0;overflow:hidden;">
+            <table class="data-table">
+              <thead><tr><th>Produit</th><th>Stock Système</th><th>Stock Physique</th><th>Écart</th><th>Statut</th></tr></thead>
+              <tbody id="tbodyInv"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- MODAL MOUVEMENT -->
+      <div class="modal-overlay" id="modalMouvement">
+        <div class="modal">
+          <div class="modal-header"><h3>Nouveau Mouvement de Stock</h3><button class="modal-close" onclick="closeModal('modalMouvement')"><i class="fas fa-xmark"></i></button></div>
+          <div class="modal-body">
+            <div class="form-group"><label class="form-label">Produit concerné</label><select class="form-select" id="mvtProduct"><option value="">Chargement...</option></select></div>
+            <div class="form-group"><label class="form-label">Type de mouvement</label><select class="form-select" id="mvtType"><option value="in">⬆️ Entrée (Réception)</option><option value="out">⬇️ Sortie (Utilisation)</option></select></div>
+            <div class="form-row">
+              <div class="form-group"><label class="form-label">Quantité</label><input type="number" class="form-input" id="mvtQty" min="1"></div>
+              <div class="form-group"><label class="form-label">Motif / Référence</label><input type="text" class="form-input" id="mvtNote" placeholder="Ex: Bon de commande #123"></div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeModal('modalMouvement')"  style="width: auto !important;" >Annuler</button>
+            <button class="btn btn-primary" onclick="saveMouvement()" style="width: auto !important;"> Enregistrer</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL INVENTAIRE -->
+      <div class="modal-overlay" id="modalInventaire">
+        <div class="modal">
+          <div class="modal-header"><h3>Enregistrer un comptage</h3><button class="modal-close" onclick="closeModal('modalInventaire')"><i class="fas fa-xmark"></i></button></div>
+          <div class="modal-body">
+            <div class="form-group"><label class="form-label">Produit</label><select class="form-select" id="invProduct"><option value="">Choisir un produit</option></select></div>
+            <div class="form-group"><label class="form-label">Stock physique compté</label><input type="number" class="form-input" id="invQty" placeholder="0"></div>
+            <div class="form-group"><label class="form-label">Note (optionnel)</label><textarea class="form-textarea" id="invNote" placeholder="Ex: 2 unités détériorées..."></textarea></div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeModal('modalInventaire')"  style="width: auto !important;" >Annuler</button>
+            <button class="btn btn-primary" onclick="saveInventory()" style="width: auto !important;"> Valider</button>
+          </div>
+        </div>
+      </div>
+
+    </div> 
+  </div> 
+  <script src="../assets/js/common.js"></script>
+<script src="../assets/js/api.js"></script>
+<script src="../assets/js/stock.js"></script>
+
+<!-- Ouvrir le bon onglet selon l'URL -->
+<script>
+  (function() {
+    var params = new URLSearchParams(window.location.search);
+    var tab = params.get('tab');
+    if (tab) {
+      var tabMap = {
+        'stock': 'tabStock',
+        'alertes': 'tabAlertes',
+        'mouvements': 'tabMouvements',
+        'inventaire': 'tabInventaire'
+      };
+      var tabId = tabMap[tab];
+      if (tabId) {
+        // Attendre que le DOM soit prêt
+        var check = setInterval(function() {
+          var btns = document.querySelectorAll('.tab-btn');
+          if (btns.length > 0) {
+            clearInterval(check);
+            // Trouver le bon bouton et cliquer dessus
+            btns.forEach(function(btn) {
+              if (btn.textContent.toLowerCase().includes(tab)) {
+                btn.click();
+              }
+            });
+          }
+        }, 50);
+      }
+    }
+  })();
+</script>
+
+  <script src="../assets/js/common.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/stock.js"></script>
+</body>
+</html>

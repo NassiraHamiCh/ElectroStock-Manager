@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>ElectroStock Manager</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+    <link rel="stylesheet" href="frontend/assets/css/main.css"/>
+  </head>
+  <body>
+
+    <!-- ===== NAVIGATION ===== -->
+    <nav>
+      <a class="nav-logo" href="#">
+        <span class="nav-logo-text">ElectroStock</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#features">Fonctionnalités</a></li>
+        <li><a href="#demo">Démo</a></li>
+        <li><a href="#how">Comment ça marche</a></li>
+        <li><a href="#stats">Statistiques</a></li>
+      </ul>
+      <div class="nav-cta">
+        <a class="btn-outline" href="frontend/docs/login.html">Se connecter</a>
+      </div>
+    </nav>
+
+    <!-- ===== HERO ===== -->
+    <section class="hero">
+      <div class="hero-blob hero-blob-1"></div>
+      <div class="hero-blob hero-blob-2"></div>
+      <div class="hero-inner">
+        <div class="hero-content">
+          <h1 class="hero-title">
+            Gérez votre stock<br>
+            <em>électronique</em> avec<br>
+            précision totale.
+          </h1>
+          <p class="hero-sub">
+            ElectroStock Manager transforme la gestion de votre inventaire électronique. Alertes intelligentes, analyses en temps réel, et assistant IA disponible 24h/24.
+          </p>
+          <div class="hero-actions">
+            <a class="btn-hero-primary" href="frontend/docs/login.html">
+              Voir le Dashboard
+            </a>
+            <a class="btn-hero-secondary" href="#demo">
+              Explorer la démo
+            </a>
+          </div>
+          <div class="hero-stats">
+            <div class="hero-stat-item">
+              <span class="hero-stat-num" data-count="2400" data-suffix="+">0</span>
+              <span class="hero-stat-label">Produits gérés</span>
+            </div>
+            <div class="hero-stat-divider"></div>
+            <div class="hero-stat-item">
+              <span class="hero-stat-num" data-count="98" data-suffix="%">0</span>
+              <span class="hero-stat-label">Précision stock</span>
+            </div>
+            <div class="hero-stat-divider"></div>
+            <div class="hero-stat-item">
+              <span class="hero-stat-num" data-count="24" data-suffix="/7">0</span>
+              <span class="hero-stat-label">Assistance IA</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <div class="dashboard-preview">
+            <div class="preview-topbar">
+              <div class="preview-dots">
+                <span></span><span></span><span></span>
+              </div>
+              <div class="preview-url">electrostock.app/dashboard</div>
+            </div>
+            <div class="preview-body">
+              <div class="preview-sidebar">
+                <div class="preview-sidebar-icon active" title="Dashboard"><i class="fas fa-chart-pie"></i></div>
+                <div class="preview-sidebar-icon" title="Produits"><i class="fas fa-box"></i></div>
+                <div class="preview-sidebar-icon" title="Stock"><i class="fas fa-warehouse"></i></div>
+                <div class="preview-sidebar-icon" title="Catégories"><i class="fas fa-tags"></i></div>
+                <div class="preview-sidebar-icon" title="Alertes"><i class="fas fa-bell"></i></div>
+                <div class="preview-sidebar-icon" title="IA Chat"><i class="fas fa-robot"></i></div>
+                <div class="preview-sidebar-icon" title="Paramètres"><i class="fas fa-cog"></i></div>
+              </div>
+              <div class="preview-main">
+                <div class="preview-cards">
+                  <div class="preview-card">
+                    <div class="preview-card-label">Produits</div>
+                    <div class="preview-card-val">1,284</div>
+                  </div>
+                  <div class="preview-card">
+                    <div class="preview-card-label">Valeur Stock</div>
+                    <div class="preview-card-val">94K MAD</div>
+                  </div>
+                  <div class="preview-card">
+                    <div class="preview-card-label">Alertes</div>
+                    <div class="preview-card-val" style="color:#ef4444">12</div>
+                  </div>
+                </div>
+                <div class="preview-chart">
+                  <div style="font-size:0.65rem;color:#64748b;margin-bottom:8px;font-weight:600;">MOUVEMENTS — 7 DERNIERS JOURS</div>
+                  <div class="preview-bars">
+                    <div class="preview-bar" style="height:40%"></div>
+                    <div class="preview-bar" style="height:65%"></div>
+                    <div class="preview-bar" style="height:52%"></div>
+                    <div class="preview-bar" style="height:85%"></div>
+                    <div class="preview-bar" style="height:70%"></div>
+                    <div class="preview-bar" style="height:95%"></div>
+                    <div class="preview-bar" style="height:78%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Floating cards -->
+          <div class="floating-card floating-card-1">
+            <div class="fc-label">Vente aujourd'hui</div>
+            <div class="fc-val">
+              MAD 4,280
+              <span class="fc-badge green">+18%</span>
+            </div>
+          </div>
+          <div class="floating-card floating-card-2">
+            <div class="fc-label">Stock critique</div>
+            <div class="fc-val">
+              3 produits
+              <span class="fc-badge red">Alerte</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FEATURES ===== -->
+    <section id="features">
+      <div class="section">
+        <div class="section-header center">
+          <div class="section-tag">Fonctionnalités</div>
+          <h2 class="section-title">Tout ce dont vous avez besoin<br>pour votre stock.</h2>
+          <p class="section-sub">Une suite complète d'outils professionnels pour gérer votre inventaire électronique avec efficacité et précision.</p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+            <div class="feature-title">Tableau de Bord Analytique</div>
+            <p class="feature-desc">Visualisez vos métriques clés en temps réel. Graphiques interactifs, KPIs personnalisés et rapports automatisés.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-bell-slash"></i></div>
+            <div class="feature-title">Alertes Intelligentes</div>
+            <p class="feature-desc">Recevez des notifications automatiques pour les ruptures de stock, dates d'expiration et seuils critiques.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-robot"></i></div>
+            <div class="feature-title">Assistant IA Intégré</div>
+            <p class="feature-desc">Votre assistant intelligent répond à vos questions sur l'inventaire, analyse les tendances et suggère des actions.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-warehouse"></i></div>
+            <div class="feature-title">Gestion Multi-entrepôt</div>
+            <p class="feature-desc">Gérez plusieurs emplacements simultanément. Transferts, réceptions et dispatching centralisés.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-tags"></i></div>
+            <div class="feature-title">Catégorisation Avancée</div>
+            <p class="feature-desc">Organisez vos produits électroniques par catégories, marques, fournisseurs et attributs personnalisés.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-shield-halved"></i></div>
+            <div class="feature-title">Sécurité & Rôles</div>
+            <p class="feature-desc">Gestion des accès par rôles, historique des actions et audit trail complet pour toute votre équipe.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== HOW IT WORKS ===== -->
+    <section class="how-section" id="how">
+      <div class="how-bg-circles">
+        <div class="how-circle"></div>
+        <div class="how-circle"></div>
+      </div>
+      <div class="how-inner">
+        <div class="section-header">
+          <div class="section-tag"> Processus</div>
+          <h2 class="section-title">Opérationnel en<br>4 étapes simples.</h2>
+          <p class="section-sub">Configurez votre système de gestion de stock en quelques minutes et commencez à travailler efficacement.</p>
+        </div>
+        <div class="steps-grid">
+          <div class="step-card">
+            <div class="step-num">01</div>
+            <div class="step-icon"><i class="fas fa-user-plus"></i></div>
+            <div class="step-title">Créez votre compte</div>
+            <p class="step-desc">Inscrivez-vous en 2 minutes. Configurez votre entreprise, vos devises et vos préférences régionales.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">02</div>
+            <div class="step-icon"><i class="fas fa-file-import"></i></div>
+            <div class="step-title">Importez vos produits</div>
+            <p class="step-desc">Importez via Excel, CSV ou saisissez manuellement. Barcodes, catégories et fournisseurs inclus.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">03</div>
+            <div class="step-icon"><i class="fas fa-sliders"></i></div>
+            <div class="step-title">Paramétrez vos alertes</div>
+            <p class="step-desc">Définissez vos seuils critiques, règles de réapprovisionnement et canaux de notification.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">04</div>
+            <div class="step-icon"><i class="fas fa-rocket"></i></div>
+            <div class="step-title">Gérez & Analysez</div>
+            <p class="step-desc">Votre tableau de bord est prêt. Suivez, analysez et optimisez votre inventaire en temps réel.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== STATS ===== -->
+    <section class="stats-band" id="stats">
+      <div class="stats-inner">
+        <div class="stat-box">
+          <span class="stat-num">50K+</span>
+          <div class="stat-label">Transactions traitées</div>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num">99.9%</span>
+          <div class="stat-label">Disponibilité système</div>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num">340+</span>
+          <div class="stat-label">Entreprises utilisatrices</div>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num">4.9★</span>
+          <div class="stat-label">Note utilisateurs</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== DEMO ===== -->
+    <section class="demo-section" id="demo">
+      <div class="demo-inner">
+        <div class="demo-grid">
+          <div class="demo-mockup">
+
+<div class="demo-table-header">
+  <div>Produit</div>
+  <div>Stock</div>
+  <div>Prix</div>
+  <div>Statut</div>
+</div>
+
+<div class="demo-table-row">
+  <div class="cell cell-name"><div class="demo-dot" style="background:#3b82f6"></div>iPhone 15 Pro Max</div>
+  <div class="cell">12 unités</div>
+  <div class="cell">14999.00 MAD</div>
+  <div class="cell"><span class="demo-status ok">En stock</span></div>
+</div>
+
+<div class="demo-table-row">
+  <div class="cell cell-name"><div class="demo-dot" style="background:#3b82f6"></div>Samsung Galaxy S24 Ultra</div>
+  <div class="cell">33 unités</div>
+  <div class="cell">13999.00 MAD</div>
+  <div class="cell"><span class="demo-status ok">En stock</span></div>
+</div>
+
+<div class="demo-table-row">
+  <div class="cell cell-name"><div class="demo-dot" style="background:#ef4444"></div>Google Pixel 8</div>
+  <div class="cell">0 unités</div>
+  <div class="cell">8200.00 MAD</div>
+  <div class="cell"><span class="demo-status out">Rupture</span></div>
+</div>
+
+<div class="demo-table-row">
+  <div class="cell cell-name"><div class="demo-dot" style="background:#3b82f6"></div>MacBook Pro M3 14"</div>
+  <div class="cell">15 unités</div>
+  <div class="cell">24999.00 MAD</div>
+  <div class="cell"><span class="demo-status ok">En stock</span></div>
+</div>
+
+<div class="demo-table-row">
+  <div class="cell cell-name"><div class="demo-dot" style="background:#f59e0b"></div>Dell XPS 15</div>
+  <div class="cell">2 unités</div>
+  <div class="cell">16500.00 MAD</div>
+  <div class="cell"><span class="demo-status low">Stock bas</span></div>
+</div>
+
+          </div>
+          <div class="demo-text">
+            <div class="section-tag">Gestion produits</div>
+            <h2 class="section-title">Votre inventaire,<br>organisé et lisible.</h2>
+            <ul class="demo-list">
+              <li>
+                <div class="demo-list-icon"><i class="fas fa-magnifying-glass"></i></div>
+                <div class="demo-list-text">
+                  <strong>Recherche ultra-rapide</strong>
+                  <span>Trouvez n'importe quel produit en millisecondes par nom, référence ou catégorie.</span>
+                </div>
+              </li>
+              <li>
+                <div class="demo-list-icon"><i class="fas fa-pen-to-square"></i></div>
+                <div class="demo-list-text">
+                  <strong>CRUD complet & intuitif</strong>
+                  <span>Ajoutez, modifiez et archivez vos produits avec une interface fluide et sans friction.</span>
+                </div>
+              </li>
+              <li>
+                <div class="demo-list-icon"><i class="fas fa-filter"></i></div>
+                <div class="demo-list-text">
+                  <strong>Filtres & exports avancés</strong>
+                  <span>Filtrez par statut, catégorie, fournisseur. Exportez en Excel ou PDF en un clic.</span>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CTA ===== -->
+    <section class="cta-section">
+      <div class="cta-glow"></div>
+      <h2 class="cta-title">Prêt à transformer<br>votre gestion de stock ?</h2>
+      <p class="cta-sub">Rejoignez les équipes qui font confiance à ElectroStock Manager pour piloter leur inventaire électronique.</p>
+      <div class="cta-actions">
+        <div class="cta-pulse-btn">
+          <div class="cta-pulse-ring"></div>
+          <a class="btn-hero-primary" href="frontend/docs/login.html" style="position:relative;z-index:2;">
+            Accéder au Dashboard
+          </a>
+        </div>
+        <a class="btn-hero-secondary" href="#features" style="border-color:rgba(255,255,255,0.3);">
+          En savoir plus
+        </a>
+      </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer>
+      <div class="footer-inner">
+        <a class="footer-brand" href="#">
+          <span class="footer-name">ElectroStock Manager</span>
+        </a>
+        <div class="footer-copy">© 2026 ElectroStock. Tous droits réservés.</div>
+        <div class="footer-links">
+          <a href="#">Confidentialité</a>
+          <a href="#">CGU</a>
+          <a href="#">Contact</a>
+        </div>
+      </div>
+    </footer>
+    <script src="frontend/assets/js/main.js"></script>
+  </body>
+</html>
